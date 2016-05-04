@@ -1,20 +1,24 @@
 {
   "name": "memoize-async",
-  "version": "0.0.1",
+  "version": "3.0.0",
   "description": "Async memoization",
   "main": "lib/index.js",
   "scripts": {
-    "test:ci": "npm run lint && npm run test:coverage",
-    "test:coverage": "istanbul cover tape -- -r babel-register src/**/*.test.js",
-    "test": "tape -r babel-register src/**/*.test.js",
+    "compile": "rimraf lib && babel src --out-dir lib --source-maps inline",
+    "compile:prod": "NODE_ENV=production rimraf lib && babel src --out-dir lib --source-maps inline",
     "lint": "eslint .",
-    "compile": "rimraf lib && babel src --out-dir lib --source-maps inline"
+    "test": "tape -r babel-register src/**/*.test.js",
+    "test:ci": "npm run lint && npm run test:coverage",
+    "test:coverage": "istanbul cover tape -- -r babel-register src/**/*.test.js"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/kkemple/memoize-async.git"
   },
-  "keywords": ["async", "memoize"],
+  "keywords": [
+    "async",
+    "memoize"
+  ],
   "author": "Kurtis Kemple <kurtiskemple@gmail.com>",
   "license": "MIT",
   "bugs": {
@@ -32,5 +36,8 @@
     "istanbul": "^1.0.0-alpha.2",
     "rimraf": "^2.5.2",
     "tape": "^4.5.1"
+  },
+  "dependencies": {
+    "sinon": "^1.17.4"
   }
 }
