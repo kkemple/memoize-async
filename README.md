@@ -11,10 +11,10 @@ Async memoization
 
 ## API
 
-### memoize(fn: function [, resolver: function]): Promise
+### memoize(fn: function [, keyGen: function]): Promise
 
 - **fn**: function to evaluate (can be async or sync)
-- **resolver**: function used to generate a key from fn params, useful for complex memoization (can be async or sync)
+- **keyGen**: function used to generate a key from fn params, useful for complex memoization (can be async or sync)
 
 > `memoize-async` expects the global `Promise` to be defined
 
@@ -43,7 +43,7 @@ memFetch('http://some.api/things')
 
 ```
 
-**With Resolver**:
+**With KeyGen**:
 
 ```javascript
 import memoize from 'memoize-async'
@@ -55,18 +55,18 @@ const fn = (user) =>
     get(user.profile).then((response) =>
       JSON.parse(response.body)))
 
-const resolver = (user) => user.id
+const keyGen = (user) => user.id
 
-const memFetchUserProfile = memoize(fn, resolver)
+const memFetchUserProfile = memoize(fn, keyGen)
 
 const user = {
   id: '1234-5678'
   profile: 'http://some.api/users/1234-5678'
 }
 
-memFetch(user)
+memFetchUserProfile(user)
   .then((profile) => console.log(profile)) // sets cache key to '1234-5678'
-  .then(() => memFetch(user))
+  .then(() => memFetchUserProfile(user))
   .then((profile) => console.log(profile)) // resolves from cache
 
 ```
@@ -78,6 +78,8 @@ import memoize from 'memoize-async'
 import { get } from 'highwire'
 import { retry } from 'u-promised'
 
+const url = 'http://some.api/things'
+
 const fn = (url) =>
   retry(3, () =>
     get(url).then((response) =>
@@ -87,9 +89,12 @@ const memFetch = memoize(fn)
 
 const CLEAR_TIMER = 1000 * 60 * 5
 
-memFetch('http://some.api/things')
-  .then((things) => console.log(things)) // must resolve from fn
+memFetch(url)
+  .then((things) => console.log(things))
+  .then(() => setTimeout(() => memFetch.cache.delete(url), CLEAR_TIMER))
+  // also
   .then(() => setTimeout(() => memFetch.cache.clear(), CLEAR_TIMER))
+
 ```
 
 ___

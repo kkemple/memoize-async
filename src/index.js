@@ -1,7 +1,7 @@
 import Cache from './cache'
 
-function memoize(fn, resolver) {
-  if (typeof fn !== 'function' || (resolver && typeof resolver !== 'function')) {
+function memoize(fn, keyGen) {
+  if (typeof fn !== 'function' || (keyGen && typeof keyGen !== 'function')) {
     throw new Error('Expected a function.')
   }
 
@@ -18,8 +18,8 @@ function memoize(fn, resolver) {
         })
     }
 
-    if (resolver) {
-      return Promise.resolve(resolver(...params))
+    if (keyGen) {
+      return Promise.resolve(keyGen(...params))
         .then((key) => findOrCreate(key))
     }
 

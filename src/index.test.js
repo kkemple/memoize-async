@@ -95,25 +95,25 @@ test('memoize-async', (t) => {
       })
   })
 
-  t.test('resolver is given arguments to fn', (assert) => {
+  t.test('keyGen is given arguments to fn', (assert) => {
     const func = () => {}
-    const resolver = sinon.spy()
+    const keyGen = sinon.spy()
     const noop = () => {}
 
-    const mem = memoize(func, resolver)
+    const mem = memoize(func, keyGen)
     mem(1, 2, noop).then(() => {
-      assert.equal(resolver.calledWith(1, 2, noop), true, 'resolver is called with fn params')
+      assert.equal(keyGen.calledWith(1, 2, noop), true, 'keyGen is called with fn params')
       assert.end()
     })
   })
 
-  t.test('resolver methods can be async', (assert) => {
+  t.test('keyGen methods can be async', (assert) => {
     const func = (a) => new Promise((res) => setTimeout(() => res(a), 10))
-    const resolver = (a) => new Promise((res) => setTimeout(() => res(a), 10))
+    const keyGen = (a) => new Promise((res) => setTimeout(() => res(a), 10))
 
-    const mem = memoize(func, resolver)
+    const mem = memoize(func, keyGen)
     mem(2).then((a) => {
-      assert.equal(a, 2, 'resolver works asynchronously')
+      assert.equal(a, 2, 'keyGen works asynchronously')
       assert.end()
     })
   })
