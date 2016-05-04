@@ -1,6 +1,6 @@
 {
   "name": "memoize-async",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Async memoization",
   "main": "lib/index.js",
   "scripts": {
