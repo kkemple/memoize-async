@@ -1,0 +1,24 @@
+machine:
+  node:
+    version: 4.2.6
+dependencies:
+  post:
+    - npm run compile
+    - |
+        if [ master == $CIRCLE_BRANCH ]; then
+          npm install -g codeclimate-test-reporter
+        fi
+test:
+  override:
+    - npm run test:ci
+  post:
+    - |
+        if [ master == $CIRCLE_BRANCH ]; then
+          codeclimate-test-reporter < coverage/lcov.info
+        fi
+# deployment:
+#   npm:
+#     branch: master
+#     commands:
+#       - echo -e "$NPM_USERNAME\n$NPM_PASSWORD\n$NPM_EMAIL" | npm login
+#       - npm publish
