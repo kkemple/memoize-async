@@ -39,6 +39,6 @@
     "tape": "^4.6.0"
   },
   "dependencies": {
-    "sinon": "^1.17.4"
+    "sinon": "^2.0.0"
   }
 }
